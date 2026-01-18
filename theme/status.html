@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="expires" content="-1">
+<link rel="icon" href="favicon.ico">
+<link rel="stylesheet" href="assets/css/styles.css">
+<script defer="" src="assets/js/alpine.min.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/theme.js"></script>
+<script src="assets/js/i18n.js"></script>
+
+    <title>Mivo Hotspot - Status</title>
+    $(if refresh-timeout)
+    <meta http-equiv="refresh" content="$(refresh-timeout-secs); url=$(link-status)">
+    $(endif)
+    <script>
+        $(if advert-pending == 'yes')
+            var popup = '';
+            function openAdvert() {
+                popup = open('$(link-advert)', 'hotspot_advert', '');
+                setTimeout('popup.focus()', 1000);
+            }
+            window.addEventListener('load', openAdvert);
+        $(endif)
+    </script>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-start p-4 pt-36 bg-background transition-colors duration-500" x-data="initTheme()">
+    
+    <div class="fixed inset-0 z-0 pointer-events-none">
+    <!-- Subtle Grid Pattern -->
+    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMCwwLDAsMC4wNSkiLz48L3N2Zz4=')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] [mask-image:linear-gradient(to_bottom,white,transparent)]"></div>
+    <!-- glowing blobs -->
+    <div class="absolute -top-[20%] -left-[10%] w-[70vw] h-[70vw] rounded-full bg-blue-500/10 dark:bg-blue-500/5 blur-[120px] animate-pulse" style="animation-duration: 4s;"></div>
+    <div class="absolute top-[30%] -right-[15%] w-[60vw] h-[60vw] rounded-full bg-purple-500/10 dark:bg-purple-500/5 blur-[100px] animate-pulse" style="animation-duration: 6s; animation-delay: 1s;"></div>
+</div>
+
+    <div class="nav-card transition-all duration-500 transform" x-data="{ showNav: true, lastScrollY: 0 }" @scroll.window="
+        showNav = window.scrollY < lastScrollY || window.scrollY < 50;
+        lastScrollY = window.scrollY;
+     " :class="showNav ? 'translate-y-0 opacity-100' : '-translate-y-24 opacity-0 pointer-events-none'">
+    <div class="theme-toggle-container">
+    <div class="theme-slider" :class="theme === 'dark' ? 'translate-x-[36px]' : 'translate-x-0'"></div>
+    <button @click="setTheme('light')" :class="theme === 'light' ? 'text-black' : 'text-slate-500 hover:text-slate-700'" class="theme-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+    </button>
+    <button @click="setTheme('dark')" :class="theme === 'dark' ? 'text-white' : 'text-slate-300 hover:text-white'" class="theme-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+</div>
+
+    <div class="h-6 w-px bg-black/5 dark:bg-white/10 mx-1"></div>
+    <div class="relative" x-data="{ open: false, lang: localStorage.getItem('mivo_lang') || 'en' }" @language-changed.window="lang = $event.detail.lang">
+    <button @click="open = !open" class="flex items-center gap-2 px-3 h-10 rounded-full bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 text-xs font-bold text-foreground hover:bg-black/10 dark:hover:bg-white/20 transition-all backdrop-blur-md min-w-[80px] justify-between shadow-sm">
+        <div class="flex items-center gap-2">
+            <img :src="'assets/svg/' + (lang === 'id' ? 'id' : 'us') + '.svg'" class="w-4 h-3 rounded-sm object-cover" alt="Flag">
+            <span x-text="lang.toUpperCase()">EN</span>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" :class="open ? 'rotate-180' : ''" class="w-3.5 h-3.5 transition-transform text-accents-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+    </button>
+    <div x-show="open" @click.away="open = false" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" style="display: none;" class="absolute right-0 mt-2 w-48 rounded-xl bg-white/90 dark:bg-black/80 border border-black/5 dark:border-white/10 backdrop-blur-xl shadow-xl overflow-hidden py-1 ring-1 ring-black/5">
+        <button @click="changeLanguage('id'); open = false" class="w-full text-left px-4 py-3 text-xs font-medium text-foreground hover:bg-black/5 dark:hover:bg-white/10 transition-colors flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="assets/svg/id.svg" class="w-4 h-3 rounded-sm object-cover" alt="ID">
+                <span>Bahasa Indonesia</span>
+            </div>
+            <span class="text-[10px] text-accents-5 font-bold">ID</span>
+        </button>
+        <button @click="changeLanguage('en'); open = false" class="w-full text-left px-4 py-3 text-xs font-medium text-foreground hover:bg-black/5 dark:hover:bg-white/10 transition-colors flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="assets/svg/us.svg" class="w-4 h-3 rounded-sm object-cover" alt="US">
+                <span>English</span>
+            </div>
+            <span class="text-[10px] text-accents-5 font-bold">EN</span>
+        </button>
+    </div>
+</div>
+
+</div>
+
+
+    <div class="relative w-full max-w-md" x-data="{ 
+        refresh() { window.location.reload(); },
+        // Live Timer
+        uptimeStr: '$(uptime)',
+        uptimeSecs: 0,
+        formattedUptime: '-',
+        
+        // API Data
+        apiData: null,
+        hasApi: window.MivoConfig?.apiBaseUrl !== '',
+        
+        init() {
+            // Parse initial uptime
+            this.uptimeSecs = window.parseTimeSeconds(this.uptimeStr);
+            this.updateUptime();
+            
+            // Start Timer
+            setInterval(() => {
+                this.uptimeSecs++;
+                this.updateUptime();
+            }, 1000);
+            
+            // Fetch API stats if available
+            if (this.hasApi) {
+                this.fetchStatus();
+            }
+        },
+        
+        updateUptime() {
+            this.formattedUptime = window.formatSeconds(this.uptimeSecs);
+        },
+        
+        async fetchStatus() {
+            try {
+                // Use $(username) to query the Check Voucher API or similar endpoint
+                const url = `${window.MivoConfig.apiBaseUrl}/api/voucher/check/$(username)`;
+                const res = await fetch(url, {
+                    headers: { 'X-Mivo-Session': window.MivoConfig.apiSession } 
+                });
+                
+                if (res.ok) {
+                    const json = await res.json();
+                    if (json && json.data) {
+                        this.apiData = json.data;
+                    }
+                }
+            } catch (e) {
+                console.error('API Error:', e);
+            }
+        }
+    }" x-init="init()" @language-changed.window="updateUptime()">
+        <div class="card">
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center gap-4">
+                    <img :src="'assets/img/' + (theme === 'light' ? 'logo-m' : 'logo-m-dark') + '.svg'" alt="Mivo Logo" class="h-10 w-auto">
+                    <div>
+                        <h1 class="text-2xl font-bold tracking-tight text-foreground" data-i18n="status.connected">Connected</h1>
+                        <p class="text-emerald-600 dark:text-emerald-400 text-xs font-medium flex items-center gap-1.5" data-i18n="status.active_session">
+                            <span class="relative flex h-2 w-2">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                            </span>
+                            Active Session
+                        </p>
+                    </div>
+                </div>
+                <div class="h-12 w-12 rounded-2xl bg-gradient-to-br from-white/10 to-transparent border border-white/10 flex items-center justify-center text-foreground shadow-inner">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
+                </div>
+            </div>
+
+            <!-- User Info Section -->
+            <div class="space-y-4 mb-8">
+                <div class="card-inner flex items-center justify-between">
+                    <span class="text-slate-400 text-sm" data-i18n="status.user">User</span>
+                    <span class="text-foreground font-mono font-medium">$(username)</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="card-inner">
+                        <p class="text-slate-500 text-[10px] uppercase tracking-wider font-bold mb-1" data-i18n="status.ip_address">IP Address</p>
+                        <p class="text-foreground text-sm font-mono">$(ip)</p>
+                    </div>
+                    <div class="card-inner flex flex-col justify-center">
+                        <p class="text-slate-500 text-[10px] uppercase tracking-wider font-bold mb-1" data-i18n="status.mac_address">MAC</p>
+                        <p class="text-foreground text-sm font-mono truncate" title="$(mac)">$(mac)</p>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="card-inner group hover:bg-white/5 transition-colors">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="p-1 rounded-md bg-transparent">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-emerald-500 dark:text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"></path></svg>
+                            </div>
+                            <span class="text-slate-500 text-[10px] uppercase tracking-wider font-bold" data-i18n="status.download">Download</span>
+                        </div>
+                        <p class="text-foreground text-lg font-bold">$(bytes-out-nice)</p>
+                    </div>
+                    <div class="card-inner group hover:bg-white/5 transition-colors">
+                        <div class="flex items-center gap-2 mb-2">
+                             <div class="p-1 rounded-md bg-transparent">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-500 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"></path></svg>
+                             </div>
+                            <span class="text-slate-500 text-[10px] uppercase tracking-wider font-bold" data-i18n="status.upload">Upload</span>
+                        </div>
+                        <p class="text-foreground text-lg font-bold">$(bytes-in-nice)</p>
+                    </div>
+                </div>
+
+                <div class="card-inner space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-400 text-sm" data-i18n="status.uptime">Session Uptime</span>
+                        <span class="text-foreground font-medium transition-all" x-text="formattedUptime">$(uptime)</span>
+                    </div>
+                    
+                    <!-- Native Remaining Time (If available from MT) -->
+                    $(if remain-time)
+                    <div class="flex items-center justify-between border-t border-white/5 pt-2">
+                        <span class="text-slate-400 text-sm" data-i18n="status.remaining">Time Remaining</span>
+                        <span class="text-cyan-400 font-bold" x-text="window.formatTime('$(remain-time)')">$(remain-time)</span>
+                    </div>
+                    $(endif)
+
+                    <!-- API Remaining Time (Fallback) -->
+                    <template x-if="apiData && !'$(remain-time)'">
+                        <div class="flex items-center justify-between border-t border-white/5 pt-2">
+                            <span class="text-slate-400 text-sm" data-i18n="status.remaining">Time Remaining</span>
+                            <!-- Assuming API returns time_left -->
+                            <span class="text-cyan-400 font-bold" x-text="window.formatTime(apiData.time_left)"></span>
+                        </div>
+                    </template>
+                    
+                     <!-- API Quota (Extra) -->
+                    <template x-if="apiData && apiData.data_left">
+                        <div class="flex items-center justify-between">
+                            <span class="text-slate-400 text-sm">Quota Remaining</span>
+                            <span class="text-emerald-400 font-bold" x-text="apiData.data_left"></span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                <button type="button" class="w-full btn-danger" onclick="location.href='$(link-logout)'" data-i18n="status.disconnect">
+                    Disconnect
+                </button>
+                
+                <button @click="refresh()" class="w-full btn-secondary" data-i18n="status.refresh">
+                    Refresh Status
+                </button>
+            </div>
+
+            <div class="mt-8 pt-8 border-t border-accents-2 dark:border-white/10">
+    <p class="text-accents-5 text-[10px] tracking-widest uppercase">MIVO THEME BY DYZULKDEV • POWERED BY MIVO</p>
+</div>
+
+        </div>
+    </div>
+</body>
+</html>

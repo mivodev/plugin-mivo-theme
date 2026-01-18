@@ -1,0 +1,61 @@
+{
+    "hotspot": {
+        "title": "Mivo Hotspot",
+        "subtitle": "Please login to access the internet",
+        "voucher": "Voucher",
+        "member": "Member",
+        "voucher_code": "Voucher Code",
+        "username": "Username",
+        "password": "Password",
+        "connect": "Connect",
+        "connecting": "Connecting...",
+        "check": "Check",
+        "checking": "Checking...",
+        "powered_by": "Powered by Mivo Theme"
+    },
+    "check": {
+        "title": "Check Voucher",
+        "subtitle": "Check your remaining quota",
+        "input_placeholder": "Enter voucher code...",
+        "not_found": "Voucher not found or not active.",
+        "quota_left": "Quota Left",
+        "time_left": "Time Left",
+        "uptime": "Uptime",
+        "validity": "Validity",
+        "expiration": "Expires",
+        "status": "Status"
+    },
+    "status": {
+        "connected": "Connected",
+        "active_session": "Active Session",
+        "user": "User",
+        "ip_address": "IP Address",
+        "mac_address": "MAC Address",
+        "download": "Download",
+        "upload": "Upload",
+        "uptime": "Session Uptime",
+        "remaining": "Time Remaining",
+        "disconnect": "Disconnect",
+        "refresh": "Refresh Status",
+        "footer": "MIVO THEME • PREMIUM HOTSPOT"
+    },
+    "logout": {
+        "title": "Logged Out",
+        "subtitle": "You have been successfully disconnected from the hotspot.",
+        "uptime": "Total Uptime",
+        "data": "Data Used",
+        "login_again": "Login Again",
+        "footer": "MIVO THEME • SEE YOU AGAIN"
+    },
+    "error": {
+        "title": "System Error",
+        "back": "Back to Login"
+    },
+    "time": {
+        "w": "Week",
+        "d": "Day",
+        "h": "Hour",
+        "m": "Minute",
+        "s": "Second"
+    }
+}

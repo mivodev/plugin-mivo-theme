@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="expires" content="-1">
+<link rel="icon" href="favicon.ico">
+<link rel="stylesheet" href="assets/css/styles.css">
+<script defer="" src="assets/js/alpine.min.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/theme.js"></script>
+<script src="assets/js/i18n.js"></script>
+
+    <title>Mivo Hotspot - Error</title>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-start p-4 pt-36 bg-background transition-colors duration-500" x-data="initTheme()">
+    
+    <div class="fixed inset-0 z-0 pointer-events-none">
+    <!-- Subtle Grid Pattern -->
+    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMCwwLDAsMC4wNSkiLz48L3N2Zz4=')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] [mask-image:linear-gradient(to_bottom,white,transparent)]"></div>
+    <!-- glowing blobs -->
+    <div class="absolute -top-[20%] -left-[10%] w-[70vw] h-[70vw] rounded-full bg-blue-500/10 dark:bg-blue-500/5 blur-[120px] animate-pulse" style="animation-duration: 4s;"></div>
+    <div class="absolute top-[30%] -right-[15%] w-[60vw] h-[60vw] rounded-full bg-purple-500/10 dark:bg-purple-500/5 blur-[100px] animate-pulse" style="animation-duration: 6s; animation-delay: 1s;"></div>
+</div>
+
+    <div class="nav-card transition-all duration-500 transform" x-data="{ showNav: true, lastScrollY: 0 }" @scroll.window="
+        showNav = window.scrollY < lastScrollY || window.scrollY < 50;
+        lastScrollY = window.scrollY;
+     " :class="showNav ? 'translate-y-0 opacity-100' : '-translate-y-24 opacity-0 pointer-events-none'">
+    <div class="theme-toggle-container">
+    <div class="theme-slider" :class="theme === 'dark' ? 'translate-x-[36px]' : 'translate-x-0'"></div>
+    <button @click="setTheme('light')" :class="theme === 'light' ? 'text-black' : 'text-slate-500 hover:text-slate-700'" class="theme-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+    </button>
+    <button @click="setTheme('dark')" :class="theme === 'dark' ? 'text-white' : 'text-slate-300 hover:text-white'" class="theme-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+</div>
+
+    <div class="h-6 w-px bg-black/5 dark:bg-white/10 mx-1"></div>
+    <div class="relative" x-data="{ open: false, lang: localStorage.getItem('mivo_lang') || 'en' }" @language-changed.window="lang = $event.detail.lang">
+    <button @click="open = !open" class="flex items-center gap-2 px-3 h-10 rounded-full bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 text-xs font-bold text-foreground hover:bg-black/10 dark:hover:bg-white/20 transition-all backdrop-blur-md min-w-[80px] justify-between shadow-sm">
+        <div class="flex items-center gap-2">
+            <img :src="'assets/svg/' + (lang === 'id' ? 'id' : 'us') + '.svg'" class="w-4 h-3 rounded-sm object-cover" alt="Flag">
+            <span x-text="lang.toUpperCase()">EN</span>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" :class="open ? 'rotate-180' : ''" class="w-3.5 h-3.5 transition-transform text-accents-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+    </button>
+    <div x-show="open" @click.away="open = false" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" style="display: none;" class="absolute right-0 mt-2 w-48 rounded-xl bg-white/90 dark:bg-black/80 border border-black/5 dark:border-white/10 backdrop-blur-xl shadow-xl overflow-hidden py-1 ring-1 ring-black/5">
+        <button @click="changeLanguage('id'); open = false" class="w-full text-left px-4 py-3 text-xs font-medium text-foreground hover:bg-black/5 dark:hover:bg-white/10 transition-colors flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="assets/svg/id.svg" class="w-4 h-3 rounded-sm object-cover" alt="ID">
+                <span>Bahasa Indonesia</span>
+            </div>
+            <span class="text-[10px] text-accents-5 font-bold">ID</span>
+        </button>
+        <button @click="changeLanguage('en'); open = false" class="w-full text-left px-4 py-3 text-xs font-medium text-foreground hover:bg-black/5 dark:hover:bg-white/10 transition-colors flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="assets/svg/us.svg" class="w-4 h-3 rounded-sm object-cover" alt="US">
+                <span>English</span>
+            </div>
+            <span class="text-[10px] text-accents-5 font-bold">EN</span>
+        </button>
+    </div>
+</div>
+
+</div>
+
+
+    <div class="relative w-full max-w-sm">
+        <div class="card text-center">
+            <div class="flex justify-center mb-6">
+                <img :src="'assets/img/' + (theme === 'light' ? 'logo-m' : 'logo-m-dark') + '.svg'" alt="Mivo Logo" class="h-10 w-auto">
+            </div>
+
+            <h1 class="text-xl font-bold tracking-tight text-foreground mb-4" data-i18n="error.title">System Error</h1>
+            
+             <div class="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm mb-6 flex items-start gap-3 text-left">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                <div class="font-mono break-words w-full">$(error)</div>
+            </div>
+
+            <a href="$(link-login)" class="w-full btn-secondary gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                <span data-i18n="error.back">Back to Login</span>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

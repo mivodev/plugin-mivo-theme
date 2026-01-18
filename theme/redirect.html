@@ -1,0 +1,41 @@
+$(if http-status == 302)Hotspot redirect$(endif)
+$(if http-header == "Location")$(link-redirect)$(endif)
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="expires" content="-1">
+<link rel="icon" href="favicon.ico">
+<link rel="stylesheet" href="assets/css/styles.css">
+<script defer="" src="assets/js/alpine.min.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/theme.js"></script>
+<script src="assets/js/i18n.js"></script>
+
+<script>
+    if (localStorage.getItem('mivo_theme') === 'dark' || (!localStorage.getItem('mivo_theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+    } else {
+        document.documentElement.classList.remove('dark');
+    }
+</script>
+<body class="antialiased bg-background text-foreground bg-cover bg-center min-h-screen flex items-center justify-center p-4 selection:bg-accent selection:text-white overflow-hidden" x-data="theme" :class="theme" :style="'background-image: url(\'assets/img/' + (theme === 'light' ? 'bg-light.jpg' : 'bg-dark.jpg') + '\');'">
+
+    <div class="fixed inset-0 bg-background/30 backdrop-blur-sm z-0"></div>
+
+    <div class="relative z-10 flex justify-center items-center">
+        <!-- Minimal Spinner -->
+        <svg class="animate-spin h-16 w-16 text-white drop-shadow-lg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+    </div>
+
+    <!-- Standard Redirect Logic (Disabled Temporarily) -->
+    <!-- <meta http-equiv="refresh" content="2; url=$(link-redirect)"> -->
+    <!-- <script>
+        window.location.href = '$(link-redirect)';
+    </script> -->
+</body>
+</html>

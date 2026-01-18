@@ -1,0 +1,61 @@
+{
+    "hotspot": {
+        "title": "Mivo Hotspot",
+        "subtitle": "Silakan login untuk mengakses internet",
+        "voucher": "Voucher",
+        "member": "Member",
+        "voucher_code": "Kode Voucher",
+        "username": "Username",
+        "password": "Password",
+        "connect": "Hubungkan",
+        "connecting": "Menghubungkan...",
+        "check": "Cek",
+        "checking": "Mengecek...",
+        "powered_by": "Didukung oleh Tema Mivo"
+    },
+    "check": {
+        "title": "Cek Voucher",
+        "subtitle": "Cek sisa kuota Anda",
+        "input_placeholder": "Masukkan kode voucher...",
+        "not_found": "Voucher tidak ditemukan atau belum aktif.",
+        "quota_left": "Sisa Kuota",
+        "time_left": "Sisa Waktu",
+        "uptime": "Durasi Pakai",
+        "validity": "Masa Aktif",
+        "expiration": "Kedaluwarsa",
+        "status": "Status"
+    },
+    "status": {
+        "connected": "Terhubung",
+        "active_session": "Sesi Aktif",
+        "user": "Pengguna",
+        "ip_address": "Alamat IP",
+        "mac_address": "Alamat MAC",
+        "download": "Unduh",
+        "upload": "Unggah",
+        "uptime": "Waktu Aktif",
+        "remaining": "Sisa Waktu",
+        "disconnect": "Putuskan Koneksi",
+        "refresh": "Perbarui Status",
+        "footer": "MIVO THEME • PREMIUM HOTSPOT"
+    },
+    "logout": {
+        "title": "Keluar",
+        "subtitle": "Anda telah berhasil diputuskan dari hotspot.",
+        "uptime": "Total Waktu",
+        "data": "Data Digunakan",
+        "login_again": "Login Lagi",
+        "footer": "MIVO THEME • SAMPAI JUMPA LAGI"
+    },
+    "error": {
+        "title": "Error Sistem",
+        "back": "Kembali ke Login"
+    },
+    "time": {
+        "w": "Minggu",
+        "d": "Hari",
+        "h": "Jam",
+        "m": "Menit",
+        "s": "Detik"
+    }
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="expires" content="-1">
+<link rel="icon" href="favicon.ico">
+<link rel="stylesheet" href="assets/css/styles.css">
+<script defer="" src="assets/js/alpine.min.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/theme.js"></script>
+<script src="assets/js/i18n.js"></script>
+
+<body onload="openAdvert()" class="antialiased bg-background text-foreground bg-cover bg-center min-h-screen flex items-center justify-start p-4 pt-36 selection:bg-accent selection:text-white overflow-hidden" x-data="theme" :class="theme" :style="'background-image: url(\'assets/img/' + (theme === 'light' ? 'bg-light.jpg' : 'bg-dark.jpg') + '\');'">
+
+    <script>
+        var popup = '';
+        function openOrig() {
+            if (window.focus) popup.focus();
+            location.href = unescape('$(link-orig-esc)');
+        }
+        function openAd() {
+            location.href = unescape('$(link-redirect-esc)');
+        }
+        function openAdvert() {
+            if (window.name != 'hotspot_advert') {
+                popup = open('$(link-redirect)', 'hotspot_advert', '');
+                setTimeout("openOrig", 1000);
+                return;
+            }
+            setTimeout("openAd", 1000);
+        }
+    </script>
+
+    <div class="fixed inset-0 bg-background/30 backdrop-blur-sm z-0"></div>
+
+    <div class="relative z-10 w-full max-w-sm">
+        <div class="card p-8 text-center space-y-6">
+            <div class="flex justify-center">
+                <div class="relative w-16 h-16 flex items-center justify-center rounded-2xl bg-blue-500/10 text-blue-500">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <h1 class="text-xl font-bold tracking-tight">Advertisement</h1>
+                <p class="text-slate-500 text-sm">Please view the advertisement to continue.</p>
+            </div>
+
+            <p class="text-xs text-slate-400">
+                If nothing happens, open <a href="$(link-redirect)" target="hotspot_advert" class="text-primary hover:underline font-medium">advertisement</a> manually.
+            </p>
+        </div>
+        <div class="mt-8 pt-8 border-t border-accents-2 dark:border-white/10">
+    <p class="text-accents-5 text-[10px] tracking-widest uppercase">MIVO THEME BY DYZULKDEV • POWERED BY MIVO</p>
+</div>
+
+    </div>
+
+    <meta http-equiv="refresh" content="2; url=$(link-orig)">
+</body>
+</html>

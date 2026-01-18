@@ -1,0 +1,52 @@
+name: Release Plugin
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger on version tags, e.g. v1.0.0
+
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed to create releases
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get Version
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Create ZIP Archive
+        run: |
+          # Create a temporary directory for the zip
+          mkdir temp_zip
+          
+          # Copy files to temp directory, excluding unwanted files
+          rsync -av --progress . temp_zip --exclude .git --exclude .github --exclude .gitignore --exclude LICENSE --exclude README.md --exclude temp_zip
+          
+          # Create the zip file
+          cd temp_zip
+          zip -r ../plugin-mivo-theme.zip .
+          cd ..
+          
+          echo "Created plugin-mivo-theme.zip"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: plugin-mivo-theme.zip
+          name: Release ${{ steps.get_version.outputs.VERSION }}
+          body: |
+            Automatic release for version ${{ steps.get_version.outputs.VERSION }}
+            
+            **Installation:**
+            1. Download `plugin-mivo-theme.zip`
+            2. Upload in Mivo > Settings > Plugins
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

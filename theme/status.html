@@ -81,57 +81,14 @@
 </div>
 
 
-    <div class="relative w-full max-w-md" x-data="{ 
-        refresh() { window.location.reload(); },
-        // Live Timer
-        uptimeStr: '$(uptime)',
-        uptimeSecs: 0,
-        formattedUptime: '-',
-        
-        // API Data
-        apiData: null,
-        hasApi: window.MivoConfig?.apiBaseUrl !== '',
-        
-        init() {
-            // Parse initial uptime
-            this.uptimeSecs = window.parseTimeSeconds(this.uptimeStr);
-            this.updateUptime();
-            
-            // Start Timer
-            setInterval(() => {
-                this.uptimeSecs++;
-                this.updateUptime();
-            }, 1000);
-            
-            // Fetch API stats if available
-            if (this.hasApi) {
-                this.fetchStatus();
-            }
-        },
-        
-        updateUptime() {
-            this.formattedUptime = window.formatSeconds(this.uptimeSecs);
-        },
-        
-        async fetchStatus() {
-            try {
-                // Use $(username) to query the Check Voucher API or similar endpoint
-                const url = `${window.MivoConfig.apiBaseUrl}/api/voucher/check/$(username)`;
-                const res = await fetch(url, {
-                    headers: { 'X-Mivo-Session': window.MivoConfig.apiSession } 
-                });
-                
-                if (res.ok) {
-                    const json = await res.json();
-                    if (json && json.data) {
-                        this.apiData = json.data;
-                    }
-                }
-            } catch (e) {
-                console.error('API Error:', e);
-            }
-        }
-    }" x-init="init()" @language-changed.window="updateUptime()">
+    <div class="relative w-full max-w-md" x-data="window.initStatusPage({
+        uptime: '$(uptime)',
+        username: '$(username)',
+        limitTime: '$(limit-session-time)',
+        limitBytes: '$(limit-bytes-total)',
+        remainBytes: '$(remain-bytes-total)',
+        remainTime: '$(remain-time)'
+    })" @language-changed.window="updateUptime()">
         <div class="card">
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center gap-4">
@@ -198,25 +155,53 @@
                         <span class="text-foreground font-medium transition-all" x-text="formattedUptime">$(uptime)</span>
                     </div>
                     
-                    <!-- Native Remaining Time (If available from MT) -->
-                    $(if remain-time)
-                    <div class="flex items-center justify-between border-t border-white/5 pt-2">
-                        <span class="text-slate-400 text-sm" data-i18n="status.remaining">Time Remaining</span>
-                        <span class="text-cyan-400 font-bold" x-text="window.formatTime('$(remain-time)')">$(remain-time)</span>
-                    </div>
-                    $(endif)
-
-                    <!-- API Remaining Time (Fallback) -->
-                    <template x-if="apiData && !'$(remain-time)'">
-                        <div class="flex items-center justify-between border-t border-white/5 pt-2">
-                            <span class="text-slate-400 text-sm" data-i18n="status.remaining">Time Remaining</span>
-                            <!-- Assuming API returns time_left -->
-                            <span class="text-cyan-400 font-bold" x-text="window.formatTime(apiData.time_left)"></span>
+                    <!-- Time Limit Bar -->
+                    <template x-if="limitTimeSecs > 0">
+                        <div class="space-y-1.5 pt-2 border-t border-white/5">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="text-slate-400" data-i18n="status.time_left">Time Left</span>
+                                <span class="text-foreground font-mono font-bold" x-text="window.formatSeconds(limitTimeSecs - uptimeSecs)"></span>
+                            </div>
+                            <div class="h-2 w-full bg-slate-700/50 rounded-full overflow-hidden">
+                                <div class="h-full rounded-full transition-all duration-500" :class="getBarColor(getTimePercent())" :style="`width: ${getTimePercent()}%`"></div>
+                            </div>
+                            <!-- Show total limit textual -->
+                            <div class="flex justify-end">
+                                 <span class="text-[10px] text-slate-500">Limit: <span x-text="limitTimeStrDisplay"></span></span>
+                            </div>
                         </div>
                     </template>
-                    
-                     <!-- API Quota (Extra) -->
-                    <template x-if="apiData && apiData.data_left">
+
+                    <!-- Native Remaining Time (Text Only Fallback if no limit detected but remain-time exists) -->
+                    <template x-if="hasRemainTime() && limitTimeSecs <= 0">
+                         <div class="flex flex-col border-t border-white/5 pt-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-slate-400 text-sm" data-i18n="status.remaining">Time Remaining</span>
+                                <span class="text-cyan-400 font-bold" x-text="getRemainTimeDisplay()"></span>
+                            </div>
+                            <!-- Debug info hidden -->
+                        </div>
+                    </template>
+
+                    <!-- Data Limit Bar -->
+                    <template x-if="limitBytes > 0 && remainBytes > 0">
+                        <div class="space-y-1.5 pt-2 border-t border-white/5">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="text-slate-400" data-i18n="status.data_left">Data Left</span>
+                                <!-- We need a formatBytes helper or simple logic roughly -->
+                                <span class="text-foreground font-mono font-bold" x-text="window.bytesToSize(remainBytes)">$(remain-bytes-total-nice)</span>
+                            </div>
+                            <div class="h-2 w-full bg-slate-700/50 rounded-full overflow-hidden">
+                                <div class="h-full rounded-full transition-all duration-500" :class="getBarColor(getDataPercent())" :style="`width: ${getDataPercent()}%`"></div>
+                            </div>
+                             <div class="flex justify-end">
+                                 <span class="text-[10px] text-slate-500">Limit: <span x-text="window.bytesToSize(limitBytes)"></span></span>
+                            </div>
+                        </div>
+                    </template>
+
+                     <!-- API Quota (Extra Fallback) -->
+                    <template x-if="(!limitBytes || limitBytes <= 0) && apiData && apiData.data_left">
                         <div class="flex items-center justify-between">
                             <span class="text-slate-400 text-sm">Quota Remaining</span>
                             <span class="text-emerald-400 font-bold" x-text="apiData.data_left"></span>

@@ -129,6 +129,12 @@
                 },
 
                 submit() {
+                    // Fix: Intercept 'check' mode to prevent login submission
+                    if (this.loginType === 'check') {
+                        this.checkVoucher();
+                        return;
+                    }
+
                     this.loading = true;
                     
                     if (typeof hexMD5 === 'function' && document.sendin) {

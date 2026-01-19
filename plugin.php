@@ -7,13 +7,13 @@ use App\Helpers\UrlHelper; // Assuming this exists or we use global functions
 /**
  * Plugin Name: Mivo Theme Downloader
  * Description: Allows downloading the Captive Portal theme with auto-configuration.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: DyzulkDev
  *
  * Category: Hotspot Tools
  * Scope: Session
  * Tags: theme, downloader, hotspot, captive-portal
- * Core Version: >= 1.0
+ * Core Version: >= 1.2.3
  */
 
 // 1. Register Routes

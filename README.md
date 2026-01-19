@@ -1,9 +1,10 @@
 # Mivo Theme Downloader
 
-**Category:** Hotspot Tools  
-**Author:** DyzulkDev  
-**Version:** 1.1.0
-**Requirements:** Mivo Core >= v1.2.3
+- **Category:** Hotspot Tools  
+- **Author:** DyzulkDev  
+- **Version:** 1.1.0
+- **Requirements:** Mivo Core >= v1.2.3
+
 
 The **Mivo Theme Downloader** allows you to easily download and install the latest Captive Portal themes directly from the Mivo settings panel.
 
